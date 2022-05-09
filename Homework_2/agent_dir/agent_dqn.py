@@ -80,7 +80,7 @@ class ReplayBuffer:
         ##################
         # YOUR CODE HERE #
         self.buffer_size = buffer_size
-        self.memory = []
+        self.buffer = []
         # self.next_idx = 0
         ##################
         # pass
@@ -88,32 +88,25 @@ class ReplayBuffer:
     def __len__(self):
         ##################
         # YOUR CODE HERE #
-        return len(self.memory)
+        return len(self.buffer)
         ##################
         # pass
 
     def push(self, *transition):
         ##################
         # YOUR CODE HERE #
-        if len(self.memory) == self.buffer_size: #buffer not full
-            self.memory.pop(0)
-        # self.memory[self.next_idx] = Transition(*transition)
-        # self.next_idx = (self.next_idx + 1) % self.buffer_size #移动指针，经验池满了之后从最开始的位置开始将最近的经验存进经验池
-        self.memory.append(transition)
-
+        if len(self.buffer) == self.buffer_size: #buffer not full
+            self.buffer.pop(0)
+        self.buffer.append(transition)
         ##################
         # pass
 
     def sample(self, batch_size):
         ##################
         # YOUR CODE HERE #
-        # if len(self.memory) > batch_size:
-        #     index = np.random.choice(len(self.memory),batch_size)
-        # else:
-        #     index = len(self.memory)
-        # batch = [self.memory[i] for i in index]
-        return random.sample(self.memory, batch_size)# 从经验池中随机采样
-        # return zip(*batch)
+        index = np.random.choice(len(self.buffer),batch_size)
+        batch = [self.buffer[i] for i in index]
+        return zip(*batch)
         ##################
         # pass
 
@@ -160,12 +153,11 @@ class AgentDQN(Agent):
         self.replay_buffer = ReplayBuffer(self.buffer_size)
 
         #构建网络
-        self.eval_dqn = QNetwork(input_size, self.hidden_size, output_size).cuda()
-        self.target_dqn = QNetwork(input_size, self.hidden_size, output_size).cuda()
+        self.eval_dqn = QNetwork(self.h, self.hidden_size, self.action_dim).cuda()
+        self.target_dqn = QNetwork(self.h, self.hidden_size, self.action_dim).cuda()
         self.optim = optim.Adam(self.eval_net.parameters(), lr=self.lr)
         self.loss_fn = nn.MSELoss()
         self.learn_step = 0
-        
         ##################
         # pass
     
@@ -181,37 +173,32 @@ class AgentDQN(Agent):
         ##################
         pass
 
-    def train(self, args):
+    def train(self):
         """
         Implement your training algorithm here
         """
         ##################
         # YOUR CODE HERE #
-        if len(self.replay_buffer) < self.replay_buffer.buffer_size:
-            loss = 0
-            return loss
-        if self.eps > args.eps_min:
-            self.eps *= args.eps_decay
+        if self.eps > self.eps_min:
+            self.eps *= self.eps_decay
         else:
-            self.eps = args.eps_min
-        
-        if self.learn_step % args.update_target == 0:
+            self.eps = self.eps_min
+        if self.learn_step % self.update_target == 0:
             self.target_net.load_state_dict(self.eval_net.state_dict())
         self.learn_step += 1
 
-        obs, actions, rewards, next_obs, dones = self.buffer.sample(args.batch_size)
+        obs, actions, rewards, next_obs, dones = self.buffer.sample(self.batch_size)
         actions = torch.LongTensor(actions)
         dones = torch.IntTensor(dones)
         rewards = torch.FloatTensor(rewards)
 
-        q_eval = self.eval_net(obs).gather(-1, actions.unsqueeze(-1)).squeeze(-1)
-        q_next = self.target_net(next_obs).detach()
-        q_target = rewards + args.gamma * (1-dones) * torch.max(q_next, dim = -1)[0]
+        q_eval = self.eval_dqn(obs).gather(-1, actions.unsqueeze(-1)).squeeze(-1)
+        q_next = self.target_dqn(next_obs).detach()
+        q_target = rewards + self.gamma * (1-dones) * torch.max(q_next, dim = -1)[0]
         loss = self.loss_fn(q_eval, q_target)
         self.optim.zero_grad()
         loss.backward()
         self.optim.step()
-
         return loss
         ##################
         # pass
@@ -224,25 +211,12 @@ class AgentDQN(Agent):
         """
         ##################
         # YOUR CODE HERE #
-        # self.stepdone += 1
-        # observation = observation.to(device)
-        # epsilon = 0.99
-        # # epsilon = EPS_END + (EPS_START - EPS_END)* \
-        # #     math.exp(-1. * self.stepdone / EPS_DECAY)            # 随机选择动作系数epsilon 衰减，也可以使用固定的epsilon
-        # # epsilon-greedy策略选择动作
-        # if random.random()<epsilon:
-        #     action = torch.tensor([[random.randrange(self.action_dim)]], device=device, dtype=torch.long)
-        # else:
-        #     action = self.DQN(observation).detach().max(1)[1].view(1,1)  # 选择Q值最大的动作并view
-            
-        # return action  
         if np.random.uniform() <= self.eps:
             action = np.random.randint(0, self.env.action_space.n)
         else:
             action_value = self.eval_dqn(observation)
-            action = torch.max(action_value, dim = -1)[1].cpu().numpy()
+            action = torch.max(action_value, dim = -1)[1].numpy()
         return int(action)
-
         ##################
         # pass
 
@@ -252,9 +226,6 @@ class AgentDQN(Agent):
         """
         ##################
         # YOUR CODE HERE #
-        step = 0 #记录现在走到第几步了
-        input_size = self.env.observation_space.shape[0]
-        output_size = self.env.action_space.n
         for i_episode in range(self.max_episodes):
             obs = self.env.reset() #获得初始观测值
             episode_reward = 0
@@ -265,17 +236,14 @@ class AgentDQN(Agent):
                 self.store_transition = (obs, action, reward, next_obs) #存储记忆
                 self.replay_buffer.push(self.store_transition)
                 # if agent.buffer.__len__() >= args.buffer_size:
-                if (step > 200) and (step % 5== 0): #当走了200次之后再每走5次学习一次
-                    loss = self.train()
-                
+                # if (step > 200) and (step % 5== 0): #当走了200次之后再每走5次学习一次
+                #     loss = self.train()
                 episode_reward += reward
                 obs = next_obs
-
+                if self.replay_buffer.__len__() >= self.replay_buffer.buffer_size:
+                    loss = self.train()
                 if done:
                     break
-
-                step += 1
             print(i_episode, "reward:", episode_reward, "loss:", loss)
-
         ##################
         # pass
