@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bed4e63b-48db-42b7-8f92-c5aa51ba7b52" name="更改" comment="init">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Homework_2/agent_dir/agent_dqn.py" beforeDir="false" afterPath="$PROJECT_DIR$/Homework_2/agent_dir/agent_dqn.py" afterDir="false" />
+    <list default="true" id="bed4e63b-48db-42b7-8f92-c5aa51ba7b52" name="更改" comment="Merge remote-tracking branch 'origin/share' into share&#10;&#10;# Conflicts:&#10;#&#9;Homework_2/agent_dir/agent_dqn.py">
+      <change beforePath="$PROJECT_DIR$/Homework_2/argument.py" beforeDir="false" afterPath="$PROJECT_DIR$/Homework_2/argument.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +55,49 @@
       <option name="project" value="LOCAL" />
       <updated>1652061749984</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Merge remote-tracking branch 'origin/share' into share&#10;&#10;# Conflicts:&#10;#&#9;Homework_2/agent_dir/agent_dqn.py">
+      <created>1652107637124</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1652107637125</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Merge remote-tracking branch 'origin/share' into share&#10;&#10;# Conflicts:&#10;#&#9;Homework_2/agent_dir/agent_dqn.py">
+      <created>1652107891863</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1652107891863</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Merge remote-tracking branch 'origin/share' into share&#10;&#10;# Conflicts:&#10;#&#9;Homework_2/agent_dir/agent_dqn.py">
+      <created>1652108005320</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1652108005320</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Merge remote-tracking branch 'origin/share' into share&#10;&#10;# Conflicts:&#10;#&#9;Homework_2/agent_dir/agent_dqn.py">
+      <created>1652108111507</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1652108111507</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Merge remote-tracking branch 'origin/share' into share&#10;&#10;# Conflicts:&#10;#&#9;Homework_2/agent_dir/agent_dqn.py">
+      <created>1652194161934</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1652194161934</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Merge remote-tracking branch 'origin/share' into share&#10;&#10;# Conflicts:&#10;#&#9;Homework_2/agent_dir/agent_dqn.py">
+      <created>1652196095573</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1652196095573</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -73,7 +114,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init" />
-    <option name="LAST_COMMIT_MESSAGE" value="init" />
+    <MESSAGE value="Merge remote-tracking branch 'origin/share' into share&#10;&#10;# Conflicts:&#10;#&#9;Homework_2/agent_dir/agent_dqn.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'origin/share' into share&#10;&#10;# Conflicts:&#10;#&#9;Homework_2/agent_dir/agent_dqn.py" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
