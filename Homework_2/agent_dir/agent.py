@@ -34,5 +34,6 @@ class Agent(object):
     def run(self):
         """
         Implement the interaction between agent and environment here
+        
         """
         raise NotImplementedError

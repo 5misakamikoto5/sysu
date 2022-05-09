@@ -3,6 +3,8 @@ import numpy as np
 import gym.spaces
 import gym
 import cv2
+import atari_py
+import ale_py
 
 
 class FireResetEnv(gym.Wrapper):

@@ -2,15 +2,16 @@ import argparse
 from wrappers import make_env
 import gym
 from argument import dqn_arguments, pg_arguments
+from tqdm import tqdm
 
 
 def parse():
     parser = argparse.ArgumentParser(description="SYSU_RL_HW2")
     parser.add_argument('--train_pg', default=False, type=bool, help='whether train policy gradient')
-    parser.add_argument('--train_dqn', default=False, type=bool, help='whether train DQN')
+    parser.add_argument('--train_dqn', default=True, type=bool, help='whether train DQN')
 
-    # parser = dqn_arguments(parser)
-    parser = pg_arguments(parser)
+    parser = dqn_arguments(parser)
+    # parser = pg_arguments(parser)
     args = parser.parse_args()
     return args
 
@@ -28,7 +29,8 @@ def run(args):
         env = make_env(env_name)
         from agent_dir.agent_dqn import AgentDQN
         agent = AgentDQN(env, args)
-        agent.run()
+        agent.run(env,args)
+        
 
 
 if __name__ == '__main__':
