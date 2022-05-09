@@ -55,7 +55,6 @@ class ReplayBuffer:
         # YOUR CODE HERE #
         self.buffer_size = buffer_size
         self.buffer = []
-        # self.next_idx = 0
         ##################
         # pass
 
