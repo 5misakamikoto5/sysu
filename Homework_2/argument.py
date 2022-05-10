@@ -17,7 +17,7 @@ def dqn_arguments(parser):
     parser.add_argument("--batch_size", default=1024, type=int)
     parser.add_argument("--gamma", default=0.99, type=float)
     parser.add_argument("--grad_norm_clip", default=10, type=float)
-    parser.add_argument("--max_episodes", default=10000, type=int)
+    parser.add_argument("--max_episode", default=10000, type=int)
     parser.add_argument("--eps", default=1.0, type=float)
     parser.add_argument("--eps_min", default=0.05, type=float)
     parser.add_argument("--eps_decay", default=0.9, type=float)

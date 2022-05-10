@@ -24,9 +24,9 @@ class QNetwork(nn.Module):
         #     in_channels (int): number of input channels
         #     n_actions (int): number of outputs
         # """
-        self.conv1 = nn.Conv2d(input_size, 32, kernel_size=8, stride=4)
+        self.conv1 = nn.Conv2d(input_size, hidden_size, kernel_size=8, stride=4)
         # self.bn1 = nn.BatchNorm2d(hidden_size)
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=4, stride=2)
+        self.conv2 = nn.Conv2d(hidden_size, 64, kernel_size=4, stride=2)
         # self.bn2 = nn.BatchNorm2d(hidden_size*2)
         self.conv3 = nn.Conv2d(64, 64, kernel_size=3, stride=1)
         # self.bn3 = nn.BatchNorm2d(hidden_size*2)
@@ -114,7 +114,7 @@ class AgentDQN(Agent):
         self.batch_size = args.batch_size
         self.gamma = args.gamma
         self.grad_norm_clip = args.grad_norm_clip
-        self.max_episodes = args.max_episode
+        self.max_episode = args.max_episode
         self.eps = args.eps
         self.eps_min = args.eps_min
         self.eps_decay = args.eps_decay
@@ -130,7 +130,7 @@ class AgentDQN(Agent):
         #构建网络
         self.eval_dqn = QNetwork(self.h, self.hidden_size, self.action_dim).cuda()
         self.target_dqn = QNetwork(self.h, self.hidden_size, self.action_dim).cuda()
-        self.optim = optim.Adam(self.eval_net.parameters(), lr=self.lr)
+        self.optim = optim.Adam(self.eval_dqn.parameters(), lr=self.lr)
         self.loss_fn = nn.MSELoss()
         self.learn_step = 0
         
@@ -207,7 +207,7 @@ class AgentDQN(Agent):
         ##################
         # YOUR CODE HERE #
         # step = 0 #记录现在走到第几步了
-        for i_episode in range(self.max_episodes):
+        for i_episode in range(self.max_episode):
             obs = self.env.reset() #获得初始观测值
             episode_reward = 0
             done = False
@@ -221,7 +221,7 @@ class AgentDQN(Agent):
                 #     loss = self.train()
                 episode_reward += reward
                 obs = next_obs
-                if self.buffer.__len__() >= self.buffer_size:
+                if self.replay_buffer.__len__() >= self.buffer_size:
                     loss = self.train()
                 if done:
                     break

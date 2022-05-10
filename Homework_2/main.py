@@ -29,7 +29,7 @@ def run(args):
         env = make_env(env_name)
         from agent_dir.agent_dqn import AgentDQN
         agent = AgentDQN(env, args)
-        agent.run(env,args)
+        agent.run()
         
 
 
