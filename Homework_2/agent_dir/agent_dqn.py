@@ -24,9 +24,9 @@ class QNetwork(nn.Module):
         #     in_channels (int): number of input channels
         #     n_actions (int): number of outputs
         # """
-        self.conv1 = nn.Conv2d(input_size, 32, kernel_size=8, stride=4)
+        self.conv1 = nn.Conv2d(input_size, hidden_size, kernel_size=8, stride=4)
         # self.bn1 = nn.BatchNorm2d(hidden_size)
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=4, stride=2)
+        self.conv2 = nn.Conv2d(hidden_size, 64, kernel_size=4, stride=2)
         # self.bn2 = nn.BatchNorm2d(hidden_size*2)
         self.conv3 = nn.Conv2d(64, 64, kernel_size=3, stride=1)
         # self.bn3 = nn.BatchNorm2d(hidden_size*2)
