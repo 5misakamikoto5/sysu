@@ -79,7 +79,7 @@ class ReplayBuffer:
     def sample(self, batch_size):
         ##################
         # YOUR CODE HERE #
-        index = len(self.buffer)
+        index = np.random.choice(len(self.buffer),batch_size)
         batch = [self.buffer[i] for i in index]
         return zip(*batch)
         ##################
@@ -91,7 +91,6 @@ class ReplayBuffer:
         self.buffer.clear()
         ##################
         # pass
-
 
 class AgentDQN(Agent):
     def __init__(self, env, args):
@@ -155,31 +154,26 @@ class AgentDQN(Agent):
         """
         ##################
         # YOUR CODE HERE #
-        # if len(self.replay_buffer) < self.replay_buffer.buffer_size:
-        #     loss = 0
-        #     return loss
         if self.eps > self.eps_min:
             self.eps *= self.eps_decay
         else:
             self.eps = self.eps_min
-        
         if self.learn_step % self.update_target == 0:
             self.target_dqn.load_state_dict(self.eval_dqn.state_dict())
         self.learn_step += 1
-
+        #step
         obs, actions, rewards, next_obs, dones = self.replay_buffer.sample(self.batch_size)
         actions = torch.LongTensor(actions)
         dones = torch.IntTensor(dones)
         rewards = torch.FloatTensor(rewards)
-
+        #net and learn
         q_eval = self.eval_dqn(obs).gather(-1, actions.unsqueeze(-1)).squeeze(-1)
         q_next = self.target_dqn(next_obs).detach()
         q_target = rewards + self.gamma * (1-dones) * torch.max(q_next, dim = -1)[0]
-        Loss = self.loss_fn(q_eval, q_target)
+        loss = self.loss_fn(q_eval, q_target)
         self.optim.zero_grad()
-        Loss.backward()
+        loss.backward()
         self.optim.step()
-        return Loss
         ##################
         # pass
 
@@ -222,10 +216,10 @@ class AgentDQN(Agent):
                 episode_reward += reward
                 obs = next_obs
                 if self.replay_buffer.__len__() >= self.buffer_size:
-                    loss = self.train()
+                    self.train()
                 if done:
                     break
                 # step += 1
-            print(i_episode, "reward:", episode_reward, "loss:", loss)
+            print(i_episode, "reward:", episode_reward)
         ##################
         # pass
