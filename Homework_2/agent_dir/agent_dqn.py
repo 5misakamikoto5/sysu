@@ -70,7 +70,7 @@ class ReplayBuffer:
     def push(self, *transition):
         ##################
         # YOUR CODE HERE #
-        if len(self.buffer) == self.buffer_size: #buffer not full
+        if len(self.buffer) == self.buffer_size: #buffer full
             self.buffer.pop(0)
         self.buffer.append(transition)
         ##################
@@ -118,7 +118,6 @@ class AgentDQN(Agent):
         self.eps = args.eps
         self.eps_min = args.eps_min
         self.eps_decay = args.eps_decay
-        # self.update_target = args.update_target
         self.test = args.test
         self.use_cuda = args.use_cuda
         self.n_frames = args.n_frames
