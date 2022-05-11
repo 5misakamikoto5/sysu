@@ -70,7 +70,7 @@ class ReplayBuffer:
     def push(self, *transition):
         ##################
         # YOUR CODE HERE #
-        if len(self.buffer) == self.buffer_size: #buffer not full
+        if len(self.buffer) == self.buffer_size: #buffer full
             self.buffer.pop(0)
         self.buffer.append(transition)
         ##################
@@ -118,7 +118,6 @@ class AgentDQN(Agent):
         self.eps = args.eps
         self.eps_min = args.eps_min
         self.eps_decay = args.eps_decay
-        # self.update_target = args.update_target
         self.test = args.test
         self.use_cuda = args.use_cuda
         self.n_frames = args.n_frames
@@ -168,9 +167,11 @@ class AgentDQN(Agent):
         self.learn_step += 1
 
         obs, actions, rewards, next_obs, dones = self.replay_buffer.sample(self.batch_size)
-        actions = torch.LongTensor(actions)
-        dones = torch.IntTensor(dones)
-        rewards = torch.FloatTensor(rewards)
+        actions = torch.tensor(np.array(actions),dtype=torch.long).to(device)
+        obs = torch.tensor(np.array(obs),dtype=torch.float32).to(device)
+        next_obs = torch.tensor(np.array(next_obs),dtype=torch.float32).to(device)
+        dones = torch.tensor(np.array(obs),dtype=torch.int32).to(device)
+        rewards = torch.tensor(np.array(rewards),dtype=torch.float32).to(device)
 
         q_eval = self.eval_dqn(obs).gather(-1, actions.unsqueeze(-1)).squeeze(-1)
         q_next = self.target_dqn(next_obs).detach()
@@ -214,14 +215,14 @@ class AgentDQN(Agent):
             while not done:
                 action = self.make_action(obs)
                 next_obs, reward, done, info = self.env.step(action)
-                self.store_transition = (obs, action, reward, next_obs) #存储记忆
+                self.store_transition = (obs, action, reward, next_obs, done) #存储记忆
                 self.replay_buffer.push(self.store_transition)
                 # if agent.buffer.__len__() >= args.buffer_size:
                 # if (step > 200) and (step % 5 == 0): #当走了200次之后再每走5次学习一次
                 #     loss = self.train()
                 episode_reward += reward
                 obs = next_obs
-                if self.replay_buffer.__len__() >= self.buffer_size:
+                if self.replay_buffer.__len__() >= 10 * self.batch_size:
                     loss = self.train()
                 if done:
                     break
